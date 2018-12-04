@@ -68,9 +68,9 @@ const generateInStock = (ingredientsArray) => {
 const renderIngredients = (ingredientsArray, parentElement) => {
   const listArray = ingredientsArray.map(item=>{
     if (item.inStock===true){
-    return(`<li><label class="checkbox"><input type="checkbox"id="${item.ingredient}"checked>${item.ingredient} <button id="ingRemove">'REMOVE'</button></label><li>`);
+    return(`<li id="${item.id}"><input type="checkbox"id="${item.id}"checked>${item.ingredient} <button id="ingRemove">'REMOVE'</button><li>`);
   }else if(item.inStock===false){
-    return (`<li><label class="checkbox"><input type="checkbox"id="${item.ingredient}">${item.ingredient} <button id="ingRemove">'REMOVE'</button></label><li>`);
+    return (`<li id="${item.id}"><input type="checkbox"id="${item.id}">${item.ingredient} <button id="ingRemove">'REMOVE'</button><li>`);
     }
   })
   const listHTML = listArray.join('')

@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 let recipes = [];
 
 const saveRecipes = ()=>{
@@ -38,6 +39,7 @@ const addIngredient = (id, ingredient, recipesArray)=>{
   recipesArray.forEach(item=>{
     if (item.id===id){
       item.ingredients.push({
+        id: uuidv4(),
         ingredient: ingredient,
         inStock: false
       })
@@ -46,37 +48,41 @@ const addIngredient = (id, ingredient, recipesArray)=>{
   saveRecipes()
 };
 
-const removeIngredient = (id, ingredient)=>{
+const removeIngredient = (recipeID, ingredientID)=>{
+  let splicePoint;
   recipes.forEach(item=>{
-    if (item.id===id){
+    if (item.id===recipeID){
       item.ingredients.forEach((item, index)=>{
-        if (item.ingredient.toLowerCase()===ingredient.toLowerCase()){
-          item.ingredients.splice(index, 1)
+        if (item.id===ingredientID){
+          splicePoint=index;
         }
-          saveRecipes()
       })
+      item.ingredients.splice(splicePoint, 1)
+      saveRecipes();
     }
   })
 };
 
-const updateRecipe = (id, updates) => {
+const updateRecipeTitle = (id, updates) => {
   const recipe = recipes.find((recipe)=>recipe.id===id)
   if (!recipe){
     return
+  }else{
+    recipe.title=updates
   }
-  if (typeof updates.title==='string'){
-    //so obviously both title and body will be a string, right? thats obvious
-    //but we are checking if updates has a title property that is a string, or a text property which is a string, this
-    //allows us to only update the title, if updates has a title property, or only the text
-    //if updates only has a text property, this way, we don't update both when we only change one
-    recipe.title = updates.title
-  }
-  if (typeof updates.body ==='string'){
-    recipe.text = updates.text
+  saveRecipes()
+};
+
+const updateRecipeText = (id, updates) => {
+  const recipe = recipes.find((recipe)=>recipe.id===id)
+  if (!recipe){
+    return
+  }else{
+    recipe.text=updates
   }
   saveRecipes()
 };
 
 
 
-export {updateRecipe, removeIngredient, addIngredient, saveRecipes, loadRecipes, getRecipes, createRecipe, deleteRecipe}
+export {updateRecipeTitle, updateRecipeText, removeIngredient, addIngredient, saveRecipes, loadRecipes, getRecipes, createRecipe, deleteRecipe}

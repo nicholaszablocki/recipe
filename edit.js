@@ -1,5 +1,5 @@
 import {initializeEditPage, renderIngredients} from './views.js'
-import {updateRecipe, deleteRecipe, getRecipes, saveRecipes, removeIngredient, addIngredient} from './recipes.js'
+import {updateRecipeTitle, updateRecipeText, deleteRecipe, getRecipes, saveRecipes, removeIngredient, addIngredient} from './recipes.js'
 
 
 const titleElement = document.querySelector('#recipe-title')
@@ -14,15 +14,16 @@ const recipeId = location.hash.substring(1)
 initializeEditPage(recipeId)
 
 returnButton.addEventListener('click', (e)=>{
+  saveRecipes();
   location.assign('/index.html')
 })
 
 titleElement.addEventListener('input', (e) => {
-    const recipe = updateRecipe(recipeId, {title:e.target.value})
+    const recipe = updateRecipeTitle(recipeId, e.target.value)
 })
 
 bodyElement.addEventListener('input', (e) => {
-    const recipe = updateRecipe(recipeId, {text:e.target.value})
+    const recipe = updateRecipeText(recipeId, e.target.value)
 })
 
 removeElement.addEventListener('click', (e) => {
@@ -48,28 +49,39 @@ ingButton.addEventListener('click', (e) => {
 ingElement.addEventListener('click', (e)=>{
   const target = e.target;
   const ingredientID = e.target.id;
+
   if (ingredientID){
-    let recipes = getRecipes()
+    const recipes = getRecipes()
     recipes.forEach(item=>{
       if (item.id===recipeId){
-        if (target.checked===true){
-          item.inStock===true
-        }else if (target.checked===false){
-          item.inStock===false
-        }
+        item.ingredients.forEach(item=>{
+          if (target.checked===true){
+            item.inStock=true
+            saveRecipes();
+          }else if (target.checked===false){
+            item.inStock=false
+            saveRecipes();
+          }
+        })
       }
     })
-    //REMEMBER, the if statement goes INSIDE the curly brackets
-    //of an arrow function. you've fucked that up in other places too so be sure to fix it. just search each file for 'if'
   }
 });
 
 ingElement.addEventListener('click', (e)=>{
-  const listElement = e.target.parentNode.id;
-  if (listElement){
-    const recipesArray = getRecipes();
-    removeIngredient(recipeId, listElement);
-    saveRecipes();
+  let ingArray;
+  if (e.target.id==='ingRemove'){
+    const listElement = e.target.parentNode.id;
+    if (listElement){
+      removeIngredient(recipeId, listElement);
+      const recipes = getRecipes();
+      recipes.forEach(item=>{
+        if (item.id===recipeId){
+          ingArray = item.ingredients
+        }
+      })
+      renderIngredients(ingArray, ingElement);
+    }
   }
 })
 
