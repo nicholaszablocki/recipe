@@ -1,5 +1,5 @@
 import {initializeEditPage, renderIngredients} from './views.js'
-import {updateRecipeTitle, updateRecipeText, deleteRecipe, getRecipes, saveRecipes, removeIngredient, addIngredient} from './recipes.js'
+import {updateRecipeTitle, updateRecipeText, deleteRecipe, createRecipe, getRecipes, saveRecipes, removeIngredient, addIngredient} from './recipes.js'
 
 
 const titleElement = document.querySelector('#recipe-title')
@@ -9,9 +9,17 @@ const ingElement = document.querySelector('#ingredients')
 const ingButton = document.querySelector('#add-Ing-Button')
 const ingInput = document.querySelector("#add-Ing-Input")
 const returnButton = document.querySelector('#return')
+const ingredientForm = document.querySelector('#new-ingredient')
 const recipeId = location.hash.substring(1)
 
+console.log(recipeId)
+createRecipe('', '', recipeId)
 initializeEditPage(recipeId)
+
+
+ingredientForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+})
 
 returnButton.addEventListener('click', (e)=>{
   saveRecipes();
