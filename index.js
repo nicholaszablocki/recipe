@@ -1,8 +1,10 @@
-import {createRecipe} from './recipes.js'
+import {createRecipe, loadRecipes, getRecipes, saveRecipes} from './recipes.js'
 import {renderRecipes} from './views.js'
+import {setFilter, getFilter} from './filters.js'
 import uuidv4 from 'uuid/v4';
 
-renderRecipes()
+const allRecipes = loadRecipes();
+renderRecipes(allRecipes)
 
 document.querySelector('#create-recipe').addEventListener('click', (e) => {
     const id = uuidv4();
@@ -15,12 +17,3 @@ setFilter({
     })
     renderRecipes()
 })
-
-/*window.addEventListener('storage', (e) => {
-    if (e.key === 'recipes') {
-        renderRecipes()
-    }
-})*/
-//the above event listener should be unnecessary as index.js only applies to
-//index.html, the localStorage is never accessed here. we only modify localStorage
-//with our call to createRecipe, but we immediately go to the edit page.
